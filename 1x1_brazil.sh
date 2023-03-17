@@ -6,6 +6,7 @@ RES=1x1_brazil
 COMPSET=IELM
 MACH=crusher
 MACH=summit
+MACH=pm-gpu
 
 case $MACH in
 
@@ -27,8 +28,18 @@ case $MACH in
     source ~/.petsc-$MACH-rdycore-gpu
     ;;
 
+  pm-gpu)
+    echo "Perlmutter GPU"
+    E3SM_DIR=/global/cfs/projectdirs/m4267/gbisht/e3sm
+    COMPILER=gnugpu
+    PROJECT=m4267
+    source ~/.petsc-rdycore-pm-gpu
+    source ~/.modules-pm-gpu
+    ;;
+
   *)
     echo "Stopping because this is an unknown machine"
+    exit 1;
     ;;
 
 esac
@@ -72,8 +83,11 @@ case $MACH in
     ./xmlchange JOB_WALLCLOCK_TIME=00:20
     ./xmlchange CHARGE_ACCOUNT=$PROJ
     ;;
+  pm-gpu)
+    ;;
   *)
     echo "Stopping because this is an unknown machine"
+    exit 1;
     ;;
 esac
 
