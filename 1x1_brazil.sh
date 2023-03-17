@@ -7,6 +7,7 @@ COMPSET=IELM
 MACH=crusher
 MACH=summit
 MACH=pm-gpu
+MACH=pm-cpu
 
 case $MACH in
 
@@ -35,6 +36,15 @@ case $MACH in
     PROJECT=m4267
     source ~/.petsc-rdycore-pm-gpu
     source ~/.modules-pm-gpu
+    ;;
+
+  pm-cpu)
+    echo "Perlmutter CPU"
+    E3SM_DIR=/global/cfs/projectdirs/m4267/gbisht/e3sm
+    COMPILER=gnu
+    PROJECT=m4267
+    source ~/.petsc-rdycore-pm-cpu
+    source ~/.modules-pm-cpu
     ;;
 
   *)
@@ -78,12 +88,22 @@ case $MACH in
   "crusher")
     ./xmlchange CIME_OUTPUT_ROOT=/gpfs/alpine/${PROJECT}/proj-shared/gb9/e3sm_scratch/crusher
     ./xmlchange JOB_WALLCLOCK_TIME=00:20:00
+    ./xmlchange run_exe="\${EXEROOT}/e3sm.exe -dm_mat_type aijkokkos -dm_vec_type kokkos -log_view_gpu_time -log_view "
     ;;
+
   summit)
     ./xmlchange JOB_WALLCLOCK_TIME=00:20
     ./xmlchange CHARGE_ACCOUNT=$PROJ
+    ./xmlchange run_exe="\${EXEROOT}/e3sm.exe -dm_mat_type aijkokkos -dm_vec_type kokkos -log_view_gpu_time -log_view "
     ;;
+
   pm-gpu)
+    ./xmlchange run_exe="\${EXEROOT}/e3sm.exe -dm_mat_type aijkokkos -dm_vec_type kokkos -log_view_gpu_time -log_view "
+    ./xmlchange JOB_WALLCLOCK_TIME=00:20:00
+    ;;
+
+  pm-cpu)
+    ./xmlchange JOB_WALLCLOCK_TIME=00:20:00
     ;;
   *)
     echo "Stopping because this is an unknown machine"
@@ -91,7 +111,6 @@ case $MACH in
     ;;
 esac
 
-./xmlchange run_exe="\${EXEROOT}/e3sm.exe -dm_mat_type aijkokkos -dm_vec_type kokkos -log_view_gpu_time -log_view "
 ./xmlchange NTASKS=1
 
 
@@ -104,7 +123,7 @@ cp $SRC_DIR/Macros/Macros.cmake.$MACH.$COMPILER Macros.cmake
 # Copy RDycore files 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 RUNDIR=`./xmlquery RUNDIR`
-cp $RDYCORE_BUILD_DIR/driver//tests/swe_roe/ex2b.yaml $RUNDIR
-cp $RDYCORE_BUILD_DIR/driver//tests/swe_roe/planar_dam_10x5.msh $RUNDIR
+cp $RDYCORE_BUILD_DIR/driver//tests/swe_roe/ex2b.yaml $RUNDIR/
+cp $RDYCORE_BUILD_DIR/driver//tests/swe_roe/planar_dam_10x5.msh $RUNDIR/
 mkdir -p $RUNDIR/output
 
