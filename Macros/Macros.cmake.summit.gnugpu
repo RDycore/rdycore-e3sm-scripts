@@ -1,0 +1,50 @@
+#
+# Use this file to include the relevant macros based on
+# machine/compiler settings. This file gets copied to CASEROOT
+# and that's the one that gets included by the build system. Feel free
+# to modify this file in the CASEROOT.
+#
+cmake_policy(SET CMP0057 NEW)
+
+set(MACROS_DIR ${CASEROOT}/cmake_macros)
+
+set(UNIVERSAL_MACRO ${MACROS_DIR}/universal.cmake)
+set(COMPILER_MACRO ${MACROS_DIR}/${COMPILER}.cmake)
+set(OS_MACRO ${MACROS_DIR}/${OS}.cmake)
+set(MACHINE_MACRO ${MACROS_DIR}/${MACH}.cmake)
+set(COMPILER_OS_MACRO ${MACROS_DIR}/${COMPILER}_${OS}.cmake)
+set(COMPILER_MACHINE_MACRO ${MACROS_DIR}/${COMPILER}_${MACH}.cmake)
+
+if (CONVERT_TO_MAKE)
+  get_cmake_property(VARS_BEFORE_BUILD_INTERNAL_IGNORE VARIABLES)
+endif()
+
+# Include order defines precedence
+foreach (MACRO_FILE ${UNIVERSAL_MACRO} ${COMPILER_MACRO} ${OS_MACRO} ${MACHINE_MACRO} ${COMPILER_OS_MACRO} ${COMPILER_MACHINE_MACRO})
+  if (EXISTS ${MACRO_FILE})
+    include(${MACRO_FILE})
+  else()
+    message("No macro file found: ${MACRO_FILE}")
+  endif()
+endforeach()
+
+if (CONVERT_TO_MAKE)
+  get_cmake_property(VARS_AFTER VARIABLES)
+
+  foreach (VAR_AFTER IN LISTS VARS_AFTER)
+    if (NOT VAR_AFTER IN_LIST VARS_BEFORE_BUILD_INTERNAL_IGNORE)
+      message("CIME_SET_MAKEFILE_VAR ${VAR_AFTER} := ${${VAR_AFTER}}")
+    endif()
+  endforeach()
+endif()
+
+
+string(APPEND FFLAGS " -I/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/include -I/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/summit-gpu-debug-gcc-9-1-0/include -I/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/netcdf-c-4.8.0-dk4dnwusxpppb4cqc2hql4iyawq7v3qp/include -I/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/parallel-netcdf-1.12.2-nse25ebg555xg2kft27irq6hpqi5jycm/include -I/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/hdf5-1.10.7-yxvwkhm4nhgezbl2mwzdruwoaiblt6q2/include -I/sw/summit/cuda/11.0.3/include ")
+string(APPEND CFLAGS " -I/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/include -I/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/summit-gpu-debug-gcc-9-1-0/include -I/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/netcdf-c-4.8.0-dk4dnwusxpppb4cqc2hql4iyawq7v3qp/include -I/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/parallel-netcdf-1.12.2-nse25ebg555xg2kft27irq6hpqi5jycm/include -I/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/hdf5-1.10.7-yxvwkhm4nhgezbl2mwzdruwoaiblt6q2/include -I/sw/summit/cuda/11.0.3/include ")
+string(APPEND CPPFLAGS " -I/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/include -I/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/summit-gpu-debug-gcc-9-1-0/include -I/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/netcdf-c-4.8.0-dk4dnwusxpppb4cqc2hql4iyawq7v3qp/include -I/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/parallel-netcdf-1.12.2-nse25ebg555xg2kft27irq6hpqi5jycm/include -I/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/hdf5-1.10.7-yxvwkhm4nhgezbl2mwzdruwoaiblt6q2/include -I/sw/summit/cuda/11.0.3/include ")
+
+string(APPEND FFLAGS " -I/ccs/home/gb9/Projects/e3sm/externals/rdycore/build-summit-gpu-debug-gcc-9-1-0/include ")
+string(APPEND SLIBS  " -L/ccs/home/gb9/Projects/e3sm/externals/rdycore/build-summit-gpu-debug-gcc-9-1-0/lib -lrdycore -lrdycore_f90 -lyaml ")
+
+string(APPEND SLIBS " -fPIC -Wall -Wwrite-strings -Wno-unknown-pragmas -Wno-lto-type-mismatch -fstack-protector -fvisibility=hidden -g3 -O0 ")
+string(APPEND SLIBS " -Wl,-rpath,/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/summit-gpu-debug-gcc-9-1-0/lib -L/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/summit-gpu-debug-gcc-9-1-0/lib -Wl,-rpath,/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/summit-gpu-debug-gcc-9-1-0/lib -L/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/summit-gpu-debug-gcc-9-1-0/lib -Wl,-rpath,/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/netcdf-c-4.8.0-dk4dnwusxpppb4cqc2hql4iyawq7v3qp/lib -L/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/netcdf-c-4.8.0-dk4dnwusxpppb4cqc2hql4iyawq7v3qp/lib -Wl,-rpath,/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/parallel-netcdf-1.12.2-nse25ebg555xg2kft27irq6hpqi5jycm/lib -L/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/parallel-netcdf-1.12.2-nse25ebg555xg2kft27irq6hpqi5jycm/lib -Wl,-rpath,/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/hdf5-1.10.7-yxvwkhm4nhgezbl2mwzdruwoaiblt6q2/lib -L/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/hdf5-1.10.7-yxvwkhm4nhgezbl2mwzdruwoaiblt6q2/lib -Wl,-rpath,/sw/summit/cuda/11.0.3/lib64 -L/sw/summit/cuda/11.0.3/lib64 -L/sw/summit/cuda/11.0.3/lib64/stubs -Wl,-rpath,/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/spectrum-mpi-10.4.0.3-20210112-6jbupg3thjwhsabgevk6xmwhd2bbyxdc/lib -L/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/spectrum-mpi-10.4.0.3-20210112-6jbupg3thjwhsabgevk6xmwhd2bbyxdc/lib -Wl,-rpath,/autofs/nccs-svm1_sw/summit/gcc/9.1.0-alpha+20190716/lib/gcc/powerpc64le-unknown-linux-gnu/9.1.0 -L/autofs/nccs-svm1_sw/summit/gcc/9.1.0-alpha+20190716/lib/gcc/powerpc64le-unknown-linux-gnu/9.1.0 -Wl,-rpath,/autofs/nccs-svm1_sw/summit/gcc/9.1.0-alpha+20190716/lib/gcc -L/autofs/nccs-svm1_sw/summit/gcc/9.1.0-alpha+20190716/lib/gcc -Wl,-rpath,/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/netlib-lapack-3.8.0-ijzmf7lgquhf5o6xynhft4odahesc43p/lib64 -L/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/netlib-lapack-3.8.0-ijzmf7lgquhf5o6xynhft4odahesc43p/lib64 -Wl,-rpath,/autofs/nccs-svm1_sw/summit/gcc/9.1.0-alpha+20190716/lib64 -L/autofs/nccs-svm1_sw/summit/gcc/9.1.0-alpha+20190716/lib64 -Wl,-rpath,/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/netcdf-fortran-4.4.5-w4lcs4gsakg64t2fhvwsu7mhqmpu5dlz/lib -L/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-9.1.0/netcdf-fortran-4.4.5-w4lcs4gsakg64t2fhvwsu7mhqmpu5dlz/lib -Wl,-rpath,/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-8.3.1/subversion-1.14.0-pmll4vfphdyqpkzmvklcoeq3ah4xmzkg/lib -L/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-8.3.1/subversion-1.14.0-pmll4vfphdyqpkzmvklcoeq3ah4xmzkg/lib -Wl,-rpath,/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-8.3.1/darshan-runtime-3.4.0-kjycgqekqo72q2f4xzrpwcnb6j4kl4ed/lib -L/sw/summit/spack-envs/base/opt/linux-rhel8-ppc64le/gcc-8.3.1/darshan-runtime-3.4.0-kjycgqekqo72q2f4xzrpwcnb6j4kl4ed/lib -Wl,-rpath,/autofs/nccs-svm1_sw/summit/gcc/9.1.0-alpha+20190716/lib -L/autofs/nccs-svm1_sw/summit/gcc/9.1.0-alpha+20190716/lib -lpetsc -lscalapack -lkokkoskernels -lkokkoscontainers -lkokkoscore -lkokkossimd -llapack -lblas -lexoIIv2for32 -lexodus -lnetcdf -lpnetcdf -lhdf5_hl -lhdf5 -lparmetis -lmetis -ltriangle -lm -lz -lceed -lcudart -lnvToolsExt -lcufft -lcublas -lcusparse -lcusolver -lcurand -lcuda -lX11 -ldl -lmpiprofilesupport -lmpi_ibm_usempif08 -lmpi_ibm_usempi_ignore_tkr -lmpi_ibm_mpifh -lmpi_ibm -lgfortran -lm -lgfortran -lm -lgcc_s -lquadmath -lpthread -lstdc++ -lquadmath -ldl ")

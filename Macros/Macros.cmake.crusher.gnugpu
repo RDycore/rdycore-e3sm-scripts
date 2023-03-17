@@ -1,0 +1,49 @@
+#
+# Use this file to include the relevant macros based on
+# machine/compiler settings. This file gets copied to CASEROOT
+# and that's the one that gets included by the build system. Feel free
+# to modify this file in the CASEROOT.
+#
+cmake_policy(SET CMP0057 NEW)
+
+set(MACROS_DIR ${CASEROOT}/cmake_macros)
+
+set(UNIVERSAL_MACRO ${MACROS_DIR}/universal.cmake)
+set(COMPILER_MACRO ${MACROS_DIR}/${COMPILER}.cmake)
+set(OS_MACRO ${MACROS_DIR}/${OS}.cmake)
+set(MACHINE_MACRO ${MACROS_DIR}/${MACH}.cmake)
+set(COMPILER_OS_MACRO ${MACROS_DIR}/${COMPILER}_${OS}.cmake)
+set(COMPILER_MACHINE_MACRO ${MACROS_DIR}/${COMPILER}_${MACH}.cmake)
+
+if (CONVERT_TO_MAKE)
+  get_cmake_property(VARS_BEFORE_BUILD_INTERNAL_IGNORE VARIABLES)
+endif()
+
+# Include order defines precedence
+foreach (MACRO_FILE ${UNIVERSAL_MACRO} ${COMPILER_MACRO} ${OS_MACRO} ${MACHINE_MACRO} ${COMPILER_OS_MACRO} ${COMPILER_MACHINE_MACRO})
+  if (EXISTS ${MACRO_FILE})
+    include(${MACRO_FILE})
+  else()
+    message("No macro file found: ${MACRO_FILE}")
+  endif()
+endforeach()
+
+if (CONVERT_TO_MAKE)
+  get_cmake_property(VARS_AFTER VARIABLES)
+
+  foreach (VAR_AFTER IN LISTS VARS_AFTER)
+    if (NOT VAR_AFTER IN_LIST VARS_BEFORE_BUILD_INTERNAL_IGNORE)
+      message("CIME_SET_MAKEFILE_VAR ${VAR_AFTER} := ${${VAR_AFTER}}")
+    endif()
+  endforeach()
+endif()
+
+string(APPEND FFLAGS " -I/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/include -I/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/crusher-gpu-debug-gcc-11-2-0/include -I/opt/cray/pe/netcdf-hdf5parallel/4.8.1.1/gnu/9.1/include -I/opt/cray/pe/parallel-netcdf/1.12.1.7/gnu/9.1/include -I/opt/cray/pe/hdf5-parallel/1.12.1.1/gnu/9.1/include -I/opt/rocm-5.4.0/include ")
+string(APPEND CFLAGS " -I/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/include -I/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/crusher-gpu-debug-gcc-11-2-0/include -I/opt/cray/pe/netcdf-hdf5parallel/4.8.1.1/gnu/9.1/include -I/opt/cray/pe/parallel-netcdf/1.12.1.7/gnu/9.1/include -I/opt/cray/pe/hdf5-parallel/1.12.1.1/gnu/9.1/include -I/opt/rocm-5.4.0/include ")
+string(APPEND CPPFLAGS " -I/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/include -I/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/crusher-gpu-debug-gcc-11-2-0/include -I/opt/cray/pe/netcdf-hdf5parallel/4.8.1.1/gnu/9.1/include -I/opt/cray/pe/parallel-netcdf/1.12.1.7/gnu/9.1/include -I/opt/cray/pe/hdf5-parallel/1.12.1.1/gnu/9.1/include -I/opt/rocm-5.4.0/include ")
+
+string(APPEND FFLAGS " -I/ccs/home/gb9/Projects/e3sm/externals/rdycore/build-crusher-gpu-debug-gcc-11-2-0/include ")
+string(APPEND SLIBS " -L/ccs/home/gb9/Projects/e3sm/externals/rdycore/build-crusher-gpu-debug-gcc-11-2-0/lib -lrdycore -lrdycore_f90 -lyaml ")
+
+string(APPEND SLIBS " -fPIC -Wall -Wwrite-strings -Wno-unknown-pragmas -Wno-lto-type-mismatch -Wno-stringop-overflow -fstack-protector -fvisibility=hidden -g3 -O0 ")
+string(APPEND SLIBS " -Wl,-rpath,/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/crusher-gpu-debug-gcc-11-2-0/lib -L/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/crusher-gpu-debug-gcc-11-2-0/lib -Wl,-rpath,/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/crusher-gpu-debug-gcc-11-2-0/lib -L/ccs/home/gb9/Projects/petsc/petsc_v3.18.4/crusher-gpu-debug-gcc-11-2-0/lib -Wl,-rpath,/opt/cray/pe/netcdf-hdf5parallel/4.8.1.1/gnu/9.1/lib -L/opt/cray/pe/netcdf-hdf5parallel/4.8.1.1/gnu/9.1/lib -Wl,-rpath,/opt/cray/pe/parallel-netcdf/1.12.1.7/gnu/9.1/lib -L/opt/cray/pe/parallel-netcdf/1.12.1.7/gnu/9.1/lib -Wl,-rpath,/opt/cray/pe/hdf5-parallel/1.12.1.1/gnu/9.1/lib -L/opt/cray/pe/hdf5-parallel/1.12.1.1/gnu/9.1/lib -Wl,-rpath,/opt/rocm-5.4.0/lib -L/opt/rocm-5.4.0/lib -Wl,-rpath,/opt/cray/pe/mpich/8.1.17/ofi/gnu/9.1/lib -L/opt/cray/pe/mpich/8.1.17/ofi/gnu/9.1/lib -Wl,-rpath,/opt/cray/pe/mpich/8.1.17/gtl/lib -L/opt/cray/pe/mpich/8.1.17/gtl/lib -Wl,-rpath,/opt/cray/pe/libsci/22.06.1.3/GNU/9.1/x86_64/lib -L/opt/cray/pe/libsci/22.06.1.3/GNU/9.1/x86_64/lib -Wl,-rpath,/opt/cray/pe/dsmml/0.2.2/dsmml/lib -L/opt/cray/pe/dsmml/0.2.2/dsmml/lib -Wl,-rpath,/opt/cray/pe/pmi/6.1.3/lib -L/opt/cray/pe/pmi/6.1.3/lib -Wl,-rpath,/opt/cray/xpmem/2.4.4-2.3_11.2__gff0e1d9.shasta/lib64 -L/opt/cray/xpmem/2.4.4-2.3_11.2__gff0e1d9.shasta/lib64 -Wl,-rpath,/opt/cray/pe/gcc/11.2.0/snos/lib/gcc/x86_64-suse-linux/11.2.0 -L/opt/cray/pe/gcc/11.2.0/snos/lib/gcc/x86_64-suse-linux/11.2.0 -Wl,-rpath,/opt/cray/pe/gcc/11.2.0/snos/lib64 -L/opt/cray/pe/gcc/11.2.0/snos/lib64 -Wl,-rpath,/opt/cray/pe/gcc/11.2.0/snos/lib -L/opt/cray/pe/gcc/11.2.0/snos/lib -lpetsc -lscalapack -lkokkoskernels -lkokkoscontainers -lkokkoscore -lkokkossimd -lexoIIv2for32 -lexodus -lnetcdf -lpnetcdf -lhdf5_hl -lhdf5 -lparmetis -lmetis -ltriangle -lz -lceed -lhipsparse -lhipblas -lhipsolver -lrocsparse -lrocsolver -lrocblas -lrocrand -lamdhip64 -lmpi_gtl_hsa -ldl -lxpmem -lgfortran -lm -lhdf5_hl_parallel -lhdf5_parallel -lhdf5hl_fortran_parallel -lhdf5_fortran_parallel -lpnetcdf -lnetcdf -lnetcdff -lmpifort_gnu_91 -lmpi_gnu_91 -lsci_gnu_81_mpi -lsci_gnu_81 -ldsmml -lpmi -lpmi2 -lgfortran -lquadmath -lpthread -lm -lgcc_s -lstdc++ -lquadmath ")

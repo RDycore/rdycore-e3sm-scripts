@@ -1,0 +1,96 @@
+#!/bin/sh
+
+SRC_DIR=$PWD
+
+RES=1x1_brazil
+COMPSET=IELM
+MACH=crusher
+MACH=summit
+
+case $MACH in
+
+  "crusher")
+    echo "OLCF Crusher"
+    E3SM_DIR=/ccs/home/gb9/Projects/e3sm
+    COMPILER=gnugpu
+    PROJECT=csc314
+    source ~/.modules-$MACH-$COMPILER
+    source ~/.petsc-$MACH-rdycore-gpu
+    ;;
+
+  summit)
+    echo "OLCF Summit"
+    E3SM_DIR=/ccs/home/gb9/Projects/e3sm
+    COMPILER=gnugpu
+    PROJECT=csc314
+    source ~/.modules-$MACH-$COMPILER
+    source ~/.petsc-$MACH-rdycore-gpu
+    ;;
+
+  *)
+    echo "Stopping because this is an unknown machine"
+    ;;
+
+esac
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Compile RDycore
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+cd $E3SM_DIR/externals/rdycore
+git submodule update --init
+RDYCORE_BUILD_DIR=$PWD/build-$PETSC_ARCH
+mkdir $RDYCORE_BUILD_DIR
+cd $RDYCORE_BUILD_DIR
+cmake .. -DCMAKE_INSTALL_PREFIX=$PWD -DCMAKE_BUILD_TYPE=Debug
+make -j4
+make -j4 install
+
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Create an E3SM case
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+cd $E3SM_DIR
+GIT_HASH=`git log -n 1 --format=%h`
+
+CASE_NAME=${RES}.${COMPSET}.${MACH}.${COMPILER}.${GIT_HASH}.`date "+%Y-%m-%d"`
+
+cd ${E3SM_DIR}/cime/scripts
+
+CASE_DIR=${E3SM_DIR}/cime/scripts
+
+./create_newcase -case ${CASE_DIR}/${CASE_NAME} \
+-res ${RES} -compset ${COMPSET} -mach ${MACH} -compiler ${COMPILER} -project ${PROJECT}
+
+cd $CASE_DIR/$CASE_NAME
+
+case $MACH in
+  "crusher")
+    ./xmlchange CIME_OUTPUT_ROOT=/gpfs/alpine/${PROJECT}/proj-shared/gb9/e3sm_scratch/crusher
+    ./xmlchange JOB_WALLCLOCK_TIME=00:20:00
+    ;;
+  summit)
+    ./xmlchange JOB_WALLCLOCK_TIME=00:20
+    ./xmlchange CHARGE_ACCOUNT=$PROJ
+    ;;
+  *)
+    echo "Stopping because this is an unknown machine"
+    ;;
+esac
+
+./xmlchange run_exe="\${EXEROOT}/e3sm.exe -dm_mat_type aijkokkos -dm_vec_type kokkos -log_view_gpu_time -log_view "
+./xmlchange NTASKS=1
+
+
+cp $SRC_DIR/Macros/Macros.cmake.$MACH.$COMPILER Macros.cmake
+./case.setup
+./case.build
+
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Copy RDycore files 
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+RUNDIR=`./xmlquery RUNDIR`
+cp $RDYCORE_BUILD_DIR/driver//tests/swe_roe/ex2b.yaml $RUNDIR
+cp $RDYCORE_BUILD_DIR/driver//tests/swe_roe/planar_dam_10x5.msh $RUNDIR
+mkdir -p $RUNDIR/output
+
