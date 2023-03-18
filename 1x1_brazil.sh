@@ -16,8 +16,8 @@ case $MACH in
     E3SM_DIR=/ccs/home/gb9/Projects/e3sm
     COMPILER=gnugpu
     PROJECT=csc314
-    source ~/.modules-$MACH-$COMPILER
-    source ~/.petsc-$MACH-rdycore-gpu
+    source petsc/petsc.$MACH.$COMPILER
+    source modules/modules.$MACH.$COMPILER
     ;;
 
   summit)
@@ -25,8 +25,8 @@ case $MACH in
     E3SM_DIR=/ccs/home/gb9/Projects/e3sm
     COMPILER=gnugpu
     PROJECT=csc314
-    source ~/.modules-$MACH-$COMPILER
-    source ~/.petsc-$MACH-rdycore-gpu
+    source petsc/petsc.$MACH.$COMPILER
+    source modules/modules.$MACH.$COMPILER
     ;;
 
   pm-gpu)
