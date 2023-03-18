@@ -34,8 +34,8 @@ case $MACH in
     E3SM_DIR=/global/cfs/projectdirs/m4267/gbisht/e3sm
     COMPILER=gnugpu
     PROJECT=m4267
-    source ~/.petsc-rdycore-pm-gpu
-    source ~/.modules-pm-gpu
+    source petsc/petsc.$MACH.$COMPILER
+    source modules/modules.$MACH.$COMPILER
     ;;
 
   pm-cpu)
@@ -43,8 +43,8 @@ case $MACH in
     E3SM_DIR=/global/cfs/projectdirs/m4267/gbisht/e3sm
     COMPILER=gnu
     PROJECT=m4267
-    source ~/.petsc-rdycore-pm-cpu
-    source ~/.modules-pm-cpu
+    source petsc/petsc.$MACH.$COMPILER
+    source modules/modules.$MACH.$COMPILER
     ;;
 
   *)
