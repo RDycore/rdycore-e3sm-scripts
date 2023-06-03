@@ -8,6 +8,7 @@ MACH=crusher
 MACH=summit
 MACH=pm-gpu
 MACH=pm-cpu
+MACH=frontier
 
 case $MACH in
 
@@ -43,6 +44,15 @@ case $MACH in
     E3SM_DIR=/global/cfs/projectdirs/m4267/gbisht/e3sm
     COMPILER=gnu
     PROJECT=m4267
+    source petsc/petsc.$MACH.$COMPILER
+    source modules/modules.$MACH.$COMPILER
+    ;;
+
+  frontier)
+    echo "Fontier GPU"
+    E3SM_DIR=/ccs/home/gb9/Projects/e3sm/
+    COMPILER=gnugpu
+    PROJECT=csc314
     source petsc/petsc.$MACH.$COMPILER
     source modules/modules.$MACH.$COMPILER
     ;;
@@ -91,20 +101,28 @@ case $MACH in
     ./xmlchange run_exe="\${EXEROOT}/e3sm.exe -dm_mat_type aijkokkos -dm_vec_type kokkos -log_view_gpu_time -log_view "
     ;;
 
-  summit)
+  "summit")
     ./xmlchange JOB_WALLCLOCK_TIME=00:20
     ./xmlchange CHARGE_ACCOUNT=$PROJ
     ./xmlchange run_exe="\${EXEROOT}/e3sm.exe -dm_mat_type aijkokkos -dm_vec_type kokkos -log_view_gpu_time -log_view "
     ;;
 
-  pm-gpu)
+  "pm-gpu")
     ./xmlchange run_exe="\${EXEROOT}/e3sm.exe -dm_mat_type aijkokkos -dm_vec_type kokkos -log_view_gpu_time -log_view "
     ./xmlchange JOB_WALLCLOCK_TIME=00:20:00
     ;;
 
-  pm-cpu)
+  "pm-cpu")
     ./xmlchange JOB_WALLCLOCK_TIME=00:20:00
     ;;
+
+  "frontier")
+    ./xmlchange CIME_OUTPUT_ROOT=/lustre/orion/csc314/proj-shared/gb9/e3sm_scratch/$MACH
+    ./xmlchange SAVE_TIMING_DIR=/lustre/orion/csc314/proj-shared/gb9/e3sm_scratch/$MACH
+    ./xmlchange JOB_WALLCLOCK_TIME=00:20:00
+    ./xmlchange run_exe="\${EXEROOT}/e3sm.exe -dm_mat_type aijkokkos -dm_vec_type kokkos -log_view_gpu_time -log_view "
+    ;;
+
   *)
     echo "Stopping because this is an unknown machine"
     exit 1;
@@ -116,14 +134,14 @@ esac
 
 cp $SRC_DIR/Macros/Macros.cmake.$MACH.$COMPILER Macros.cmake
 ./case.setup
-./case.build
+#./case.build
 
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Copy RDycore files 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 RUNDIR=`./xmlquery RUNDIR`
-cp $RDYCORE_BUILD_DIR/driver//tests/swe_roe/ex2b.yaml $RUNDIR/
-cp $RDYCORE_BUILD_DIR/driver//tests/swe_roe/planar_dam_10x5.msh $RUNDIR/
+cp $RDYCORE_BUILD_DIR/driver/tests/swe_roe/ex2b.yaml $RUNDIR/
+cp $RDYCORE_BUILD_DIR/driver/tests/swe_roe/planar_dam_10x5.msh $RUNDIR/
 mkdir -p $RUNDIR/output
 
