@@ -34,5 +34,5 @@ source ../modules/modules.pm-cpu.gnu
 --download-exodusii \
 --download-libceed \
 --with-debugging=1 \
-PETSC_ARCH=arch-pm-gpu-debug-gcc-11-2-0
+PETSC_ARCH=pm-gpu-debug-gcc-11-2-0
 

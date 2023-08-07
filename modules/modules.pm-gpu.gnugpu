@@ -2,7 +2,6 @@ module purge
 module load craype-x86-milan
 module load libfabric/1.15.2.0
 module load craype-network-ofi
-module load xpmem/2.5.2-2.4_3.20__gd0f7936.shasta
 module load cpe/22.11
 module load xalt/2.10.2
 module load gpu/1.0
@@ -15,11 +14,11 @@ module load Nsight-Compute/2022.1.1
 module load Nsight-Systems/2022.2.1
 module load cudatoolkit/11.5
 module load craype-accel-nvidia80
-module load cray-libsci/22.11.1.2
-module load craype/2.7.19
-module load cray-mpich/8.1.22
-module load cray-hdf5-parallel/1.12.2.1
-module load cray-netcdf-hdf5parallel/4.9.0.1
-module load cray-parallel-netcdf/1.12.3.1
-module load cmake/3.22.0
+module load cray-libsci/23.02.1.1
+module load craype/2.7.20
+module load cray-mpich/8.1.25
+module load cray-hdf5-parallel/1.12.2.3
+module load cray-netcdf-hdf5parallel/4.9.0.3
+module load cray-parallel-netcdf/1.12.3.3
+module load cmake/3.24.3
 
