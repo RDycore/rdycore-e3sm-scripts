@@ -38,13 +38,18 @@ if (CONVERT_TO_MAKE)
   endforeach()
 endif()
 
-string(APPEND FFLAGS " -I/global/cfs/projectdirs/m4267/petsc/petsc_v3.18.4/include -I/global/cfs/projectdirs/m4267/petsc/petsc_v3.18.4/arch-pm-cpu-debug-gcc-11-2-0/include -I/opt/cray/pe/netcdf-hdf5parallel/4.9.0.1/gnu/9.1/include -I/opt/cray/pe/parallel-netcdf/1.12.3.1/gnu/9.1/include -I/opt/cray/pe/hdf5-parallel/1.12.2.1/gnu/9.1/include ")
-string(APPEND CFLAGS " -I/global/cfs/projectdirs/m4267/petsc/petsc_v3.18.4/include -I/global/cfs/projectdirs/m4267/petsc/petsc_v3.18.4/arch-pm-cpu-debug-gcc-11-2-0/include -I/opt/cray/pe/netcdf-hdf5parallel/4.9.0.1/gnu/9.1/include -I/opt/cray/pe/parallel-netcdf/1.12.3.1/gnu/9.1/include -I/opt/cray/pe/hdf5-parallel/1.12.2.1/gnu/9.1/include ")
-string(APPEND CPPFLAGS " -I/global/cfs/projectdirs/m4267/petsc/petsc_v3.18.4/include -I/global/cfs/projectdirs/m4267/petsc/petsc_v3.18.4/arch-pm-cpu-debug-gcc-11-2-0/include -I/opt/cray/pe/netcdf-hdf5parallel/4.9.0.1/gnu/9.1/include -I/opt/cray/pe/parallel-netcdf/1.12.3.1/gnu/9.1/include -I/opt/cray/pe/hdf5-parallel/1.12.2.1/gnu/9.1/include ")
-string(APPEND FFLAGS " -I/global/cfs/projectdirs/m4267/gbisht/rdycore/build-arch-pm-cpu-debug-gcc-11-2-0/include ")
-string(APPEND SLIBS " -L/global/cfs/projectdirs/m4267/gbisht/rdycore/build-arch-pm-cpu-debug-gcc-11-2-0/lib -lrdycore -lrdycore_f90 -lyaml ")
 
-string(APPEND SLIBS " -fPIC -Wall -ffree-line-length-none -ffree-line-length-0 -Wno-lto-type-mismatch -Wno-unused-dummy-argument -O  ")
-string(APPEND SLIBS " -Wl,-rpath,/global/cfs/projectdirs/m4267/petsc/petsc_v3.18.4/arch-pm-cpu-debug-gcc-11-2-0/lib -L/global/cfs/projectdirs/m4267/petsc/petsc_v3.18.4/arch-pm-cpu-debug-gcc-11-2-0/lib -Wl,-rpath,/global/cfs/projectdirs/m4267/petsc/petsc_v3.18.4/arch-pm-cpu-debug-gcc-11-2-0/lib -L/global/cfs/projectdirs/m4267/petsc/petsc_v3.18.4/arch-pm-cpu-debug-gcc-11-2-0/lib -Wl,-rpath,/opt/cray/pe/netcdf-hdf5parallel/4.9.0.1/gnu/9.1/lib -L/opt/cray/pe/netcdf-hdf5parallel/4.9.0.1/gnu/9.1/lib -Wl,-rpath,/opt/cray/pe/parallel-netcdf/1.12.3.1/gnu/9.1/lib -L/opt/cray/pe/parallel-netcdf/1.12.3.1/gnu/9.1/lib -Wl,-rpath,/opt/cray/pe/hdf5-parallel/1.12.2.1/gnu/9.1/lib -L/opt/cray/pe/hdf5-parallel/1.12.2.1/gnu/9.1/lib -lpetsc -lscalapack -lexoIIv2for32 -lexodus -lnetcdf -lpnetcdf -lhdf5_hl -lhdf5 -lparmetis -lmetis -ltriangle -lz -lceed -lX11 -lquadmath -lstdc++ -ldl  ")
+string(APPEND FFLAGS " -I/global/cfs/projectdirs/m4267/petsc/petsc_99e66fd4349/include -I/global/cfs/projectdirs/m4267/petsc/petsc_99e66fd4349/pm-cpu-gcc-11-2-0/include -I/opt/cray/pe/netcdf-hdf5parallel/4.9.0.3/gnu/9.1/include -I/opt/cray/pe/parallel-netcdf/1.12.3.3/gnu/9.1/include -I/opt/cray/pe/hdf5-parallel/1.12.2.3/gnu/9.1/include ")
+string(APPEND CFLAGS " -I/global/cfs/projectdirs/m4267/petsc/petsc_99e66fd4349/include -I/global/cfs/projectdirs/m4267/petsc/petsc_99e66fd4349/pm-cpu-gcc-11-2-0/include -I/opt/cray/pe/netcdf-hdf5parallel/4.9.0.3/gnu/9.1/include -I/opt/cray/pe/parallel-netcdf/1.12.3.3/gnu/9.1/include -I/opt/cray/pe/hdf5-parallel/1.12.2.3/gnu/9.1/include ")
+string(APPEND CPPFLAGS " -I/global/cfs/projectdirs/m4267/petsc/petsc_99e66fd4349/include -I/global/cfs/projectdirs/m4267/petsc/petsc_99e66fd4349/pm-cpu-gcc-11-2-0/include -I/opt/cray/pe/netcdf-hdf5parallel/4.9.0.3/gnu/9.1/include -I/opt/cray/pe/parallel-netcdf/1.12.3.3/gnu/9.1/include -I/opt/cray/pe/hdf5-parallel/1.12.2.3/gnu/9.1/include ")
+
+string(APPEND FFLAGS " -I/global/cfs/projectdirs/m4267/gbisht/e3sm/externals/rdycore/build-pm-cpu-gcc-11-2-0/include ")
+string(APPEND SLIBS " /global/cfs/projectdirs/m4267/gbisht/e3sm/externals/rdycore/build-pm-cpu-gcc-11-2-0/lib/librdycore.a ")
+string(APPEND SLIBS " /global/cfs/projectdirs/m4267/gbisht/e3sm/externals/rdycore/build-pm-cpu-gcc-11-2-0/lib/librdycore_f90.a ")
+string(APPEND SLIBS " /global/cfs/projectdirs/m4267/gbisht/e3sm/externals/rdycore/build-pm-cpu-gcc-11-2-0/lib/libcyaml.a ")
+string(APPEND SLIBS " /global/cfs/projectdirs/m4267/gbisht/e3sm/externals/rdycore/build-pm-cpu-gcc-11-2-0/lib/libyaml.a ")
+
+string(APPEND SLIBS "  -Wl,-rpath,/global/cfs/projectdirs/m4267/petsc/petsc_99e66fd4349/pm-cpu-gcc-11-2-0/lib -L/global/cfs/projectdirs/m4267/petsc/petsc_99e66fd4349/pm-cpu-gcc-11-2-0/lib -Wl,-rpath,/global/cfs/projectdirs/m4267/petsc/petsc_99e66fd4349/pm-cpu-gcc-11-2-0/lib -L/global/cfs/projectdirs/m4267/petsc/petsc_99e66fd4349/pm-cpu-gcc-11-2-0/lib -Wl,-rpath,/opt/cray/pe/netcdf-hdf5parallel/4.9.0.3/gnu/9.1/lib -L/opt/cray/pe/netcdf-hdf5parallel/4.9.0.3/gnu/9.1/lib -Wl,-rpath,/opt/cray/pe/parallel-netcdf/1.12.3.3/gnu/9.1/lib -L/opt/cray/pe/parallel-netcdf/1.12.3.3/gnu/9.1/lib -Wl,-rpath,/opt/cray/pe/hdf5-parallel/1.12.2.3/gnu/9.1/lib -L/opt/cray/pe/hdf5-parallel/1.12.2.3/gnu/9.1/lib -lpetsc -lscalapack -lparmetis -lmetis -lexoIIv2for32 -lexodus -lnetcdf -lpnetcdf -lhdf5_hl -lhdf5 -ltriangle -lz -lceed -lX11 -lstdc++ -lquadmath")
+
 
 
