@@ -3,13 +3,14 @@ module load craype-x86-trento
 module load libfabric/1.15.2.0   
 module load craype-network-ofi   
 module load perftools-base/22.12.0                  
-module load xpmem/2.5.2-2.4_3.30__gd0f7936.shasta   
+module load xpmem/2.6.2-2.5_2.22__gd067c3f.shasta
 module load cray-pmi/6.1.8                          
 module load craype/2.7.19          
 module load cray-dsmml/0.2.2       
 module load cray-libsci/22.12.1.1  
 module load PrgEnv-gnu/8.3.3  
 module load gcc/11.2.0        
+module load darshan-runtime/3.4.0
 module load hsi/default       
 module load DefApps/default          
 module load cray-mpich/8.1.23        
